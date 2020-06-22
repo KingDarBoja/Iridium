@@ -1,0 +1,18 @@
+{
+  "[nim]":  {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2
+  },
+  "nim.buildOnSave": false,
+  "nim.lintOnSave": true,
+  "editor.tokenColorCustomizations": {
+      "textMateRules": [
+          {
+              "scope": "basicTypes.nim",
+              "settings": {
+                  "foreground": "#CB4B16"
+              }
+          }
+      ]
+  }
+}
