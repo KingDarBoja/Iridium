@@ -1,5 +1,5 @@
 ## ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country codes
-## ISO 3166 has three parts: codes for countries, codes for subdivisions and formerly used codes (codes that were once used to describe countries but are no longer in use).
+## Defines codes for the names of countries, dependent territories, and special areas of geographical interest.
 ##
 ## The country codes can be represented either as a two-letter code (alpha-2) which is recommended as the general-purpose code,
 ## a three-letter code (alpha-3) which is more closely related to the country name and a three-digit numeric code (numeric-3) which can be useful if you need to avoid using Latin script.

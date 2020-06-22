@@ -4,7 +4,7 @@ proc generateCountryCodes*(): void =
   let countryCodes = parseFile("data/iso_3166-1.json")
   var data: string = """
   ## ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country codes
-  ## ISO 3166 has three parts: codes for countries, codes for subdivisions and formerly used codes (codes that were once used to describe countries but are no longer in use).
+  ## Defines codes for the names of countries, dependent territories, and special areas of geographical interest.
   ##
   ## The country codes can be represented either as a two-letter code (alpha-2) which is recommended as the general-purpose code,
   ## a three-letter code (alpha-3) which is more closely related to the country name and a three-digit numeric code (numeric-3) which can be useful if you need to avoid using Latin script.
@@ -39,4 +39,46 @@ proc generateCountryCodes*(): void =
 
   writeFile("src/Iridium/generated/countries.nim", data)
 
-generateCountryCodes()
+
+proc generateSubdivisionCodes*(): void =
+  let subdivisionCodes = parseFile("data/iso_3166-2.json")
+  var data: string = """
+  ## ISO 3166-2 Codes for the representation of names of countries and their subdivisions – Part 2: Country subdivision code
+  ## Defines codes for the names of the principal subdivisions (e.g., provinces, states, departments, regions)
+  ## of all countries coded in ISO 3166-1.
+  ##
+  ## The codes for subdivisions are represented as the alpha-2 code for the country, followed by up to three characters.
+  ## For example ID-RI is the Riau province of Indonesia and NG-RI is the Rivers province in Nigeria.
+  ## Names and codes for subdivisions are usually taken from relevant official national information sources.
+  ##
+  ## ================== AUTO-GENERATED FILE, DO NOT EDIT ==================
+  import tables
+
+  type
+    CountrySubdivision* = object
+      code*: string        ## Code of the country subdivision
+      name*: string        ## Name of the country subdivision
+      category*: string        ## Type of subdivision of the country (i.e. Province, Region, Emirate)
+      parent*: string      ## Parent of the country subdivision
+
+  const Subdivisions*: Table[string, CountrySubdivision] = [
+    """.unindent(2)
+
+  for subdivision in subdivisionCodes["3166-2"]:
+    let code = subdivision["code"].getStr()
+    let name = subdivision["name"].getStr()
+    let category = subdivision["type"].getStr()
+    let parent = subdivision{"parent"}.getStr()
+    let countryCode = code.split("-")[0]
+    # Use string interpolation to create the subdivision constant
+    data.add(
+      fmt"""("{countryCode}", CountrySubdivision(code: "{code}", name: "{name}", category: "{category}", parent: "{parent}")),
+      """.unindent(4)
+    )
+  data.removeSuffix("  ")
+  data.add("].toTable")
+
+  writeFile("src/Iridium/generated/subdivisions.nim", data)
+
+
+# generateSubdivisionCodes()
