@@ -5,8 +5,5 @@
 import iridium/iso_3166_1
 import iridium/iso_3166_2
 
-export iso_3166_1.getAllCountries
-export iso_3166_1.getCountryByCode
-export iso_3166_2.getAllSubdivisions
-export iso_3166_2.getSubdivisionsByCountry
-export iso_3166_2.getSubdivisionByCode
+export iso_3166_1
+export iso_3166_2
