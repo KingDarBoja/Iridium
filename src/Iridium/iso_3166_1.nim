@@ -2,6 +2,10 @@ import tables, strformat
 
 import generated/countries
 
+
+proc getAllCountries*(): Table[string, CountryDivision] = Countries
+
+
 proc getCountryByCode*(code: string): CountryDivision =
   if Countries.hasKey(code):
     return Countries[code]

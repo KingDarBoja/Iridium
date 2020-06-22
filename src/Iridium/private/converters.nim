@@ -56,7 +56,6 @@ proc generateSubdivisionCodes*(): void =
 
   type
     CountrySubdivision* = object
-      code*: string        ## Code of the country subdivision
       name*: string        ## Name of the country subdivision
       category*: string    ## Type of subdivision of the country (i.e. Province, Region, Emirate)
       parent*: string      ## Parent of the country subdivision
@@ -65,13 +64,13 @@ proc generateSubdivisionCodes*(): void =
     """.unindent(2)
 
   for subdivision in subdivisionCodes["3166-2"]:
-    let code = subdivision["code"].getStr().split("-")
+    let code = subdivision["code"].getStr()
     let name = subdivision["name"].getStr()
     let category = subdivision["type"].getStr()
     let parent = subdivision{"parent"}.getStr()
     # Use string interpolation to create the subdivision constant
     data.add(
-      fmt"""("{code[0]}", CountrySubdivision(code: "{code[1]}", name: "{name}", category: "{category}", parent: "{parent}")),
+      fmt"""("{code}", CountrySubdivision(name: "{name}", category: "{category}", parent: "{parent}")),
       """.unindent(4)
     )
   data.removeSuffix("  ")
