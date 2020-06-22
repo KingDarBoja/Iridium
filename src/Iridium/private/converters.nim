@@ -58,21 +58,20 @@ proc generateSubdivisionCodes*(): void =
     CountrySubdivision* = object
       code*: string        ## Code of the country subdivision
       name*: string        ## Name of the country subdivision
-      category*: string        ## Type of subdivision of the country (i.e. Province, Region, Emirate)
+      category*: string    ## Type of subdivision of the country (i.e. Province, Region, Emirate)
       parent*: string      ## Parent of the country subdivision
 
   const Subdivisions*: Table[string, CountrySubdivision] = [
     """.unindent(2)
 
   for subdivision in subdivisionCodes["3166-2"]:
-    let code = subdivision["code"].getStr()
+    let code = subdivision["code"].getStr().split("-")
     let name = subdivision["name"].getStr()
     let category = subdivision["type"].getStr()
     let parent = subdivision{"parent"}.getStr()
-    let countryCode = code.split("-")[0]
     # Use string interpolation to create the subdivision constant
     data.add(
-      fmt"""("{countryCode}", CountrySubdivision(code: "{code}", name: "{name}", category: "{category}", parent: "{parent}")),
+      fmt"""("{code[0]}", CountrySubdivision(code: "{code[1]}", name: "{name}", category: "{category}", parent: "{parent}")),
       """.unindent(4)
     )
   data.removeSuffix("  ")
@@ -81,4 +80,4 @@ proc generateSubdivisionCodes*(): void =
   writeFile("src/Iridium/generated/subdivisions.nim", data)
 
 
-# generateSubdivisionCodes()
+generateSubdivisionCodes()
