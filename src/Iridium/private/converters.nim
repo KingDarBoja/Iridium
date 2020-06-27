@@ -79,4 +79,45 @@ proc generateSubdivisionCodes*(): void =
   writeFile("src/Iridium/generated/subdivisions.nim", data)
 
 
-generateSubdivisionCodes()
+proc generateFormelyCountryCodes*(): void =
+  let oldCountryCodes = parseFile("data/iso_3166-3.json")
+  var data: string = """
+  ## Codes for the representation of names of countries and their subdivisions – Part 3: Code for formerly used names of countries
+  ## Defines codes for country names which have been deleted from ISO 3166-1 since its first publication in 1974.
+  ##
+  ## The formerly used codes are four-letter codes (alpha-4). How the alpha-4 codes are constructed depends on the reason why
+  ## the country name has been removed.
+  ##
+  ## ================== AUTO-GENERATED FILE, DO NOT EDIT ==================
+  import tables
+
+  type
+    FormerCountryDivision* = object
+      name*: string         ## Country name (short)
+      alpha2*: string       ## Two letter alphabetic code of the country
+      alpha3*: string       ## Three letter alphabetic code of the country
+      alpha4*: string       ## Four letter alphabetic code of the country
+      numeric*: string      ## Three digit numeric code of the country, including leading zeros (optional)
+      withdrawal*: string   ## Withdrawal date
+      comment*: string      ## Comment for the country, not the reason though (optional)
+
+  const FormerCountries*: Table[string, FormerCountryDivision] = [
+    """.unindent(2)
+
+  for country in oldCountryCodes["3166-3"]:
+    let name = country["name"].getStr()
+    let alpha2Code = country["alpha_2"].getStr()
+    let alpha3Code = country["alpha_3"].getStr()
+    let alpha4Code = country["alpha_4"].getStr()
+    let numericCode = country{"numeric"}.getStr()
+    let withdrawal = country{"withdrawal_date"}.getStr("")
+    let comment = country{"comment"}.getStr("")
+    # Use string interpolation to create the country constant
+    data.add(
+      fmt"""("{alpha2Code}", FormerCountryDivision(name: "{name}", alpha2: "{alpha2Code}", alpha3: "{alpha3Code}", alpha4: "{alpha4Code}", numeric: "{numericCode}", withdrawal: "{withdrawal}", comment: "{comment}")),
+      """.unindent(4)
+    )
+  data.removeSuffix("  ")
+  data.add("].toTable")
+
+  writeFile("src/Iridium/generated/former_countries.nim", data)

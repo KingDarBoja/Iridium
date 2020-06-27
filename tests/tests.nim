@@ -50,3 +50,29 @@ suite "ISO 3166-2 Tests":
   test "Throw KeyError if subdivision code does not exist":
     expect KeyError:
       discard getSubdivisionByCode("CO-AMX")
+
+
+suite "ISO 3166-3 Tests":
+
+  test "Get all former countries":
+    check(getAllFormerCountries().len == 30)
+
+  test "Retrieve the country data by its alpha2 code":
+    let country = getFormerCountryByCode("AN")
+    check(country.name == "Netherlands Antilles")
+
+  test "Retrieve the country data by its alpha3 code":
+    let country = getFormerCountryByAlpha3("HVO")
+    check(country.name == "Upper Volta, Republic of")
+
+  test "Retrieve the country data by its alpha4 code":
+    let country = getFormerCountryByAlpha4("NTHH")
+    check(country.name == "Neutral Zone")
+
+  test "Retrieve the country data by its name":
+    let country = getFormerCountryByName("USSR, Union of Soviet Socialist Republics")
+    check(country.name == "USSR, Union of Soviet Socialist Republics")
+
+  test "Retrieve the country data by its numeric code":
+    let countryA = getFormerCountryByNumeric("180")
+    check(countryA.name == "Zaire, Republic of")
