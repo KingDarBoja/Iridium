@@ -1,4 +1,76 @@
-import json, strutils, strformat
+import algorithm, json, strutils, strformat, sequtils
+import xlsx
+
+
+## Used to check the `minor` column of the currency xls file,
+## which can be a positive integer or zero but also "N/A"
+proc isInteger(value: string): bool =
+  result = true
+  try:
+    discard parseInt(value)
+  except ValueError:
+    result = false
+
+
+proc generateCurrencyCodes*(): void =
+  let
+    countryData = parseFile("data/iso_3166-1.json")
+    sheetName = "Active"
+    data = parseExcel("data/iso_4217_per_country.xlsx", sheetName)
+    rows = data[sheetName].toSeq(false)
+    lastIndex = find(map(rows, proc (x: seq[string]): string = x[0]), "ZIMBABWE")
+    filteredRows = map(rows[4 .. lastIndex], proc (x: seq[string]): seq[string] = x[0 .. 4])
+    currencyCodes: seq[string] = sorted(
+      filter(
+        deduplicate(
+          map(
+            filteredRows,
+            proc (x: seq[string]): string = x[2]
+          ),
+        ),
+        proc (x: string): bool = not x.isEmptyOrWhitespace
+      )
+    )
+
+  var currencyData: string = """
+  ## ISO 4217 Codes for the representation of currency codes.
+  ## Is a standard first published by International Organization for Standardization in 1978, which delineates
+  ## currency designators, country codes (alpha and numeric), and references to minor units.
+  ##
+  ## This standard establishes internationally recognized codes for the representation of currencies that enable
+  ## clarity and reduce errors. Currencies are represented both numerically and alphabetically, using either
+  ## three digits or three letters.
+  ##
+  ## ================== AUTO-GENERATED FILE, DO NOT EDIT ==================
+  import tables
+
+  type
+    CurrencyCode* = object
+      name*: string                     ## Currency name
+      alpha3*: string                   ## Three letter alphabetic code of the currency
+      numeric*: string                  ## Three digit numeric code of the country, including leading zeros
+      minor*: number                    ## Relationship between a major currency unit and its corresponding minor currency unit (optional)
+
+  const Currencies*: Table[string, CurrencyCode] = [
+    """.unindent(2)
+  for code in currencyCodes:
+    let
+      codeData = filter(filteredRows, proc (r: seq[string]): bool = r[2] == code)[0]
+      name = codeData[1]
+      alpha3 = codeData[2]
+      numeric = codeData[3]
+      minor = if isInteger(codeData[4]): parseInt(codeData[4]) else: -1
+
+    currencyData.add(
+      fmt"""("{code}", CurrencyCode(name: "{name}", alpha3: "{alpha3}", numeric: "{numeric}", official: "{minor}")),
+      """.unindent(4)
+    )
+  currencyData.removeSuffix("  ")
+  currencyData.add("].toTable")
+
+  writeFile("src/Iridium/generated/currencies.nim", currencyData)
+
+generateCurrencyCodes()
 
 proc generateCountryCodes*(): void =
   let countryCodes = parseFile("data/iso_3166-1.json")
