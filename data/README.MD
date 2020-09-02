@@ -1,6 +1,6 @@
 # ISO Source Data
 
-The json files inside this directory were obtained at
+The json files inside this directory were obtained mostly from
 [iso-codes](https://salsa.debian.org/iso-codes-team/iso-codes) project and only
 uses the ISO 3166 related data, explained below (taken from the same repository
 readme):
@@ -24,6 +24,9 @@ http://www.iso.org/iso/country_codes
 This lists the currency codes and names. The official ISO 4217 maintenance
 agency is the Swiss Association for Standardization.
 http://www.currency-iso.org/en/home.html
+
+Also other sources for this ISO are listed below:
+- https://datahub.io/JohnSnowLabs/iso-4217-currency-codes
 
 ## ISO CHANGES
 

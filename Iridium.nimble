@@ -11,7 +11,6 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.2.0"
-requires "xls >= 0.4.4"
 
 task test, "Runs the test suite":
   exec "nim c -r tests/tests"
