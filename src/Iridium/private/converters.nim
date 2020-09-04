@@ -27,7 +27,9 @@ type
 
 
 proc getCurrencyCodes(): seq[CurrencyCodeMap] =
-  let currencyCodes = parseFile("data/iso-4217-currency-codes.json")
+  let
+    jsonFile = readFile("data/iso-4217-currency-codes.json")
+    currencyCodes = jsonFile.parseJson
   for currency in currencyCodes.items:
     var
       munit = newJInt(currency["Minor_Unit"].getInt(-1))
@@ -74,7 +76,8 @@ proc generateCurrencyCodes(): seq[CurrencyCode] {.compileTime.} =
 ]##
 proc generateCountryCodes(): seq[CountryDivision] {.compileTime.} =
   let
-    countryCodes = parseFile("data/iso_3166-1.json")
+    jsonFile = readFile("data/iso_3166-1.json")
+    countryCodes = jsonFile.parseJson
     currencyCodes = getCurrencyCodes()
 
   for country in countryCodes["3166-1"]:
