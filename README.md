@@ -1,7 +1,7 @@
 # Iridium
 The International Standard for country codes and codes for their subdivisions on Nim (ISO-3166).
 
-[![](https://img.shields.io/badge/Nimble-0.2.0-yellow?style=flat-square&logo=nim)](https://nimble.directory/pkg/iridium)
+[![](https://img.shields.io/badge/Nimble-0.3.1-yellow?style=flat-square&logo=nim)](https://nimble.directory/pkg/iridium)
 [![GitHub issues](https://img.shields.io/github/issues/KingDarBoja/Iridium?style=flat-square)](https://github.com/KingDarBoja/Iridium/issues)
 [![GitHub stars](https://img.shields.io/github/stars/KingDarBoja/Iridium?style=flat-square)](https://github.com/KingDarBoja/Iridium/stargazers)
 

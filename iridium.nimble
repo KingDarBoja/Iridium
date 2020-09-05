@@ -1,12 +1,14 @@
 # Package
 
-version       = "0.3.0"
+
+version       = "0.3.1"
 author        = "KingDarBoja"
 description   = "The International Standard for country codes and codes for their subdivisions on Nim (ISO-3166)"
 license       = "MIT"
 srcDir        = "src"
 
 installDirs = @["data"]
+
 
 # Dependencies
 
