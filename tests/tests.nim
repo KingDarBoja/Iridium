@@ -76,3 +76,13 @@ suite "ISO 3166-3 Tests":
   test "Retrieve the country data by its numeric code":
     let countryA = getFormerCountryByNumeric("180")
     check(countryA.name == "Zaire, Republic of")
+
+
+suite "ISO 4217 Tests":
+
+  test "Get all currencies":
+    check(getAllCurrencies().len == 298)
+
+  test "Retrieve the currency data by its alphabetic code":
+    let curr = getCurrencyByCode("AOA")
+    check(curr.name == "Kwanza")

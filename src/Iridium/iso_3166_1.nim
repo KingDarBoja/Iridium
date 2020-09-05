@@ -1,6 +1,6 @@
 import tables, strformat, strutils
 
-import generated/countries
+import private/converters
 
 
 proc getAllCountries*(): Table[string, CountryDivision] = Countries

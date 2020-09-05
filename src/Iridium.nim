@@ -5,7 +5,9 @@
 import iridium/iso_3166_1
 import iridium/iso_3166_2
 import iridium/iso_3166_3
+import iridium/iso_4217
 
 export iso_3166_1
 export iso_3166_2
 export iso_3166_3
+export iso_4217
