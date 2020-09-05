@@ -1,7 +1,7 @@
 # Iridium
 The International Standard for country codes and codes for their subdivisions on Nim (ISO-3166).
 
-[![](https://img.shields.io/badge/Nimble-0.3.1-yellow?style=flat-square&logo=nim)](https://nimble.directory/pkg/iridium)
+[![](https://img.shields.io/badge/Nimble-0.3.2-yellow?style=flat-square&logo=nim)](https://nimble.directory/pkg/iridium)
 [![GitHub issues](https://img.shields.io/github/issues/KingDarBoja/Iridium?style=flat-square)](https://github.com/KingDarBoja/Iridium/issues)
 [![GitHub stars](https://img.shields.io/github/stars/KingDarBoja/Iridium?style=flat-square)](https://github.com/KingDarBoja/Iridium/stargazers)
 
@@ -68,7 +68,7 @@ Each procedure will raise a `KeyError` if the code does not satisfy certain chec
   Get the country data by its alpha2 code.
 
   - **Arguments**:
-    - `code` ISO3166-1 alpha2 code, required.
+    - `code` ISO-3166-1 alpha2 code, required.
   - **Returns**: `CountryDivision`
 
 - **getCountryByName()**
@@ -84,7 +84,7 @@ Each procedure will raise a `KeyError` if the code does not satisfy certain chec
   Get the country data by its alpha3 code.
 
   - **Arguments**:
-    - `alpha3Code` ISO3166-1 alpha3 code, required.
+    - `alpha3Code` ISO-3166-1 alpha3 code, required.
   - **Returns**: `CountryDivision`
 
 - **getCountryByNumeric()**
@@ -92,7 +92,7 @@ Each procedure will raise a `KeyError` if the code does not satisfy certain chec
   Get the country data by its numeric code.
 
   - **Arguments**:
-    - `numericCode` ISO3166-1 numeric code as string or integer, required.
+    - `numericCode` ISO-3166-1 numeric code as string or integer, required.
   - **Returns**: `CountryDivision`
 
 
@@ -110,7 +110,7 @@ Each procedure will raise a `KeyError` if the code does not satisfy certain chec
   Get the country subdivisions data by its code as a sequence.
 
   - **Arguments**:
-    - `countryCode` ISO3166-1 alpha2 country code as string, required.
+    - `countryCode` ISO-3166-1 alpha2 country code as string, required.
   - **Returns**: `seq[CountrySubdivision]`
 
 - **getSubdivisionByCode()**
@@ -118,5 +118,23 @@ Each procedure will raise a `KeyError` if the code does not satisfy certain chec
   Get the subdivision data by its code.
 
   - **Arguments**:
-    - `numericCode` ISO3166-2 code as string, required.
+    - `numericCode` ISO-3166-2 code as string, required.
   - **Returns**: `CountrySubdivision`
+
+
+#### ISO-4217 Related
+
+- **getAllCurrencies()**
+
+  Get all the currencies as a Nim table whose keys are the currency alphabetic code and the values as CurrencyCode object.
+
+  - **Arguments**: None
+  - **Returns**: `Table[string, CurrencyCode]`
+
+- **getCurrencyByCode()**
+
+  Get the currency data by its alphabetic code.
+
+  - **Arguments**:
+    - `code` ISO-4217 alphabetic code as string, required.
+  - **Returns**: `CurrencyCode`

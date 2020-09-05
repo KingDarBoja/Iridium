@@ -42,7 +42,7 @@ type
 
 proc getCurrencyCodes(): seq[CurrencyCodeMap] =
   let
-    jsonFile = staticRead("../../../data/iso-4217-currency-codes.json")
+    jsonFile = staticRead("../../data/iso-4217-currency-codes.json")
     currencyCodes = jsonFile.parseJson
   for currency in currencyCodes.items:
     var
@@ -87,7 +87,7 @@ proc generateCurrencyCodes(): Table[string, CurrencyCode] {.compileTime.} =
 ]##
 proc generateCountryCodes(): Table[string, CountryDivision] {.compileTime.} =
   let
-    jsonFile = staticRead("../../../data/iso_3166-1.json")
+    jsonFile = staticRead("../../data/iso_3166-1.json")
     countryCodes = jsonFile.parseJson
     currencyCodes = getCurrencyCodes()
 
@@ -125,7 +125,7 @@ proc generateCountryCodes(): Table[string, CountryDivision] {.compileTime.} =
 ]##
 proc generateSubdivisionCodes*(): Table[string, CountrySubdivision] {.compileTime.} =
   let
-    jsonFile = staticRead("../../../data/iso_3166-2.json")
+    jsonFile = staticRead("../../data/iso_3166-2.json")
     subdivisionCodes = jsonFile.parseJson
 
   for subdivision in subdivisionCodes["3166-2"]:
@@ -146,7 +146,7 @@ proc generateSubdivisionCodes*(): Table[string, CountrySubdivision] {.compileTim
 ]##
 proc generateFormelyCountryCodes*(): Table[string, FormerCountryDivision] {.compileTime.} =
   let
-    jsonFile = staticRead("../../../data/iso_3166-3.json")
+    jsonFile = staticRead("../../data/iso_3166-3.json")
     oldCountryCodes = jsonFile.parseJson
 
   for country in oldCountryCodes["3166-3"]:
