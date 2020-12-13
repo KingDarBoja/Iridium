@@ -67,7 +67,10 @@ proc generateCurrencyCodes(): Table[string, CurrencyCode] {.compileTime.} =
   let
     tempCurrencies = getCurrencyCodes()
     filteredCurrencyCodes: seq[string] = deduplicate(tempCurrencies.map(x => x.Alphabetic_Code)).filter(x => not x.isEmptyOrWhitespace).sorted()
-  for code in filteredCurrencyCodes:
+  for code in filteredCurrencyCodes.items:
+    # Before (Nim 1.2 and older) the compiler would do the copy for you; but now
+    # it doesn't because it can be more efficient that way.
+    let code = code
     let codeData: CurrencyCodeMap = tempCurrencies.filter(r => r.Alphabetic_Code == code)[0]
     result[code] = CurrencyCode(
       name: escape(codeData.Currency, "", ""),
