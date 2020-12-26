@@ -19,9 +19,10 @@ type
     official*: string       ## Official name of the country (optional)
 
   CountrySubdivision* = object
+    code*: string           ## Subdivision code.
     name*: string           ## Name of the country subdivision
-    category*: string       ## Type of subdivision of the country (i.e. Province, Region, Emirate)
-    parent*: string         ## Parent of the country subdivision
+    `type`*: string         ## Type of subdivision of the country (i.e. Province, Region, Emirate)
+    parent*: string         ## Parent of the country subdivision (optional)
 
   CurrencyCode* = object
     name*: string           ## Currency name
@@ -63,7 +64,7 @@ proc getCurrencyCodes(): seq[CurrencyCodeMap] =
   clarity and reduce errors. Currencies are represented both numerically and alphabetically, using either
   three digits or three letters.
 ]##
-proc generateCurrencyCodes(): Table[string, CurrencyCode] {.compileTime.} =
+proc generateCurrencyCodes(): OrderedTable[string, CurrencyCode] {.compileTime.} =
   let
     tempCurrencies = getCurrencyCodes()
     filteredCurrencyCodes: seq[string] = deduplicate(tempCurrencies.map(x => x.Alphabetic_Code)).filter(x => not x.isEmptyOrWhitespace).sorted()
@@ -80,6 +81,8 @@ proc generateCurrencyCodes(): Table[string, CurrencyCode] {.compileTime.} =
       withdrawal: codeData.Withdrawal_Date
     )
 
+  result.sort(proc (x,y: (string, CurrencyCode)): int = result = cmp(x[0], y[0]))
+
 
 ##[
   ISO 3166-1 Codes for the representation of names of countries and their subdivisions – Part 1: Country codes
@@ -88,7 +91,7 @@ proc generateCurrencyCodes(): Table[string, CurrencyCode] {.compileTime.} =
   a three-letter code (alpha-3) which is more closely related to the country name and a three-digit numeric code (numeric-3)
   which can be useful if you need to avoid using Latin script.
 ]##
-proc generateCountryCodes(): Table[string, CountryDivision] {.compileTime.} =
+proc generateCountryCodes(): OrderedTable[string, CountryDivision] {.compileTime.} =
   let
     jsonFile = staticRead("../../data/iso_3166-1.json")
     countryCodes = jsonFile.parseJson
@@ -117,6 +120,8 @@ proc generateCountryCodes(): Table[string, CountryDivision] {.compileTime.} =
       official: country{"official_name"}.getStr("")
     )
 
+  result.sort(proc (x,y: (string, CountryDivision)): int = result = cmp(x[0], y[0]))
+
 
 ##[
   ISO 3166-2 Codes for the representation of names of countries and their subdivisions – Part 2: Country subdivision code
@@ -126,19 +131,29 @@ proc generateCountryCodes(): Table[string, CountryDivision] {.compileTime.} =
   For example ID-RI is the Riau province of Indonesia and NG-RI is the Rivers province in Nigeria.
   Names and codes for subdivisions are usually taken from relevant official national information sources.
 ]##
-proc generateSubdivisionCodes*(): Table[string, CountrySubdivision] {.compileTime.} =
+proc generateSubdivisionCodes*(): OrderedTable[string, OrderedTable[string, CountrySubdivision]] {.compileTime.} =
   let
     jsonFile = staticRead("../../data/iso_3166-2.json")
     subdivisionCodes = jsonFile.parseJson
+  var subdivisionTable = initOrderedTable[string, OrderedTable[string, CountrySubdivision]]()
 
   for subdivision in subdivisionCodes["3166-2"]:
-    let code = subdivision["code"].getStr()
+    let
+      code = subdivision["code"].getStr()
+      countryCode = code.split('-')[0]
+      subdivisionCode = code.split('-')[1]
+    var previous = subdivisionTable.getOrDefault(countryCode)
 
-    result[code] = CountrySubdivision(
+    previous[subdivisionCode] = CountrySubdivision(
+      code: code,
       name: subdivision["name"].getStr(),
-      category: subdivision["type"].getStr(),
+      `type`: subdivision["type"].getStr(),
       parent: subdivision{"parent"}.getStr()
     )
+    subdivisionTable[countryCode] = previous
+
+  result = subdivisionTable
+  result.sort(proc (x,y: (string, OrderedTable[string, CountrySubdivision])): int = result = cmp(x[0], y[0]))
 
 
 ##[
@@ -147,7 +162,7 @@ proc generateSubdivisionCodes*(): Table[string, CountrySubdivision] {.compileTim
   The formerly used codes are four-letter codes (alpha-4). How the alpha-4 codes are constructed depends on the reason why
   the country name has been removed.
 ]##
-proc generateFormelyCountryCodes*(): Table[string, FormerCountryDivision] {.compileTime.} =
+proc generateFormelyCountryCodes*(): OrderedTable[string, FormerCountryDivision] {.compileTime.} =
   let
     jsonFile = staticRead("../../data/iso_3166-3.json")
     oldCountryCodes = jsonFile.parseJson
@@ -164,6 +179,8 @@ proc generateFormelyCountryCodes*(): Table[string, FormerCountryDivision] {.comp
       withdrawal: country{"withdrawal_date"}.getStr(""),
       comment: country{"comment"}.getStr("")
     )
+
+  result.sort(proc (x,y: (string, FormerCountryDivision)): int = result = cmp(x[0], y[0]))
 
 
 const Currencies* = generateCurrencyCodes()

@@ -2,8 +2,9 @@ import tables, strformat, strutils
 
 import private/converters
 
+export CountryDivision
 
-proc getAllCountries*(): Table[string, CountryDivision] = Countries
+proc getAllCountries*(): OrderedTable[string, CountryDivision] = Countries
 
 
 proc getCountryByCode*(code: string): CountryDivision =

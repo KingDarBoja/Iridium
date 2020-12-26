@@ -43,6 +43,10 @@ suite "ISO 3166-2 Tests":
     let someYemenSub = getSubdivisionByCode("YE-SN")
     check(someYemenSub.name == "Şan'ā'")
 
+  test "Retrieve the subdivision data by code (variant)":
+    let someYemenSub = getSubdivisionByCode("YE", "SN")
+    check(someYemenSub.name == "Şan'ā'")
+
   test "Retrieve the subdivisions by country":
     let colombiaSubs = getSubdivisionsByCountry("CO")
     check(colombiaSubs.len == 33)
@@ -50,6 +54,10 @@ suite "ISO 3166-2 Tests":
   test "Throw KeyError if subdivision code does not exist":
     expect KeyError:
       discard getSubdivisionByCode("CO-AMX")
+
+  test "Throw KeyError if subdivision code does not exist (variant)":
+    expect KeyError:
+      discard getSubdivisionByCode("CO", "AMX")
 
 
 suite "ISO 3166-3 Tests":

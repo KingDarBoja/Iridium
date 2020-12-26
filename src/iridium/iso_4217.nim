@@ -1,9 +1,10 @@
-import tables, strformat, strutils
+import tables, strformat
 
 import private/converters
 
+export CurrencyCode
 
-proc getAllCurrencies*(): Table[string, CurrencyCode] = Currencies
+proc getAllCurrencies*(): OrderedTable[string, CurrencyCode] = Currencies
 
 
 proc getCurrencyByCode*(code: string): CurrencyCode =
